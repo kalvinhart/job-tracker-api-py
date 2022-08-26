@@ -11,7 +11,7 @@ class Job(db.Model):
     date_applied = db.Column(db.DateTime, nullable=False)
     date_updated = db.Column(db.DateTime, nullable=False)
     interview_date = db.Column(db.DateTime, nullable=True)
-    benefits = location = db.Column(db.String(100), nullable=False)
+    benefits = db.Column(db.String(100), nullable=False)
     contact_name = db.Column(db.String(40), nullable=True)
     contact_number = db.Column(db.String(11), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
