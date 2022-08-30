@@ -2,7 +2,9 @@ from flask import request, jsonify
 from app import app, db
 from app.models import User, Job, user_schema, job_schema
 from werkzeug.security import check_password_hash
-from datetime import datetime
+
+
+from app.controllers.job_controller import JobController
 
 @app.get("/")
 def home():
@@ -10,22 +12,16 @@ def home():
 
 @app.get("/jobs")
 def get_all_jobs():
-    return "get all jobs"
+    return JobController.get_all_jobs()
 
 @app.post("/jobs/new")
 def save_job():
     data = request.get_json()
-    js_date = data.get("date")
-    py_date = datetime.fromtimestamp(js_date / 1000.0)
-    new_job = Job(status="Pending", title=data.get("title"), company=data.get("company"), location=data.get("location"), salary=data.get("salary"), description=data.get("description"), date_applied=py_date, benefits=data.get("benefits"), contact_name=data.get("contactName"), contact_number=data.get("contactNumber"), user_id=data.get("user_id"))
-    db.session.add(new_job)
-    db.session.commit()
-    return job_schema.jsonify(new_job)
+    return JobController.save_job(data)
 
 @app.get("/job/<string:id>")
 def get_job(id):
-    job = Job.query.get(id)
-    return job_schema.jsonify(job)
+    return JobController.get_job(id)
 
 
 @app.put("/job/<string:id>/edit")
