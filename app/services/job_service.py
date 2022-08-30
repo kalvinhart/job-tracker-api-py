@@ -13,7 +13,11 @@ class JobService:
 
     def get_job(id):
         job = Job.query.get(id)
-        return job_schema.jsonify(job)
+
+        if job != None:
+            return job_schema.jsonify(job)
+        else:
+            return None
 
     def save_job(data):
         py_date = convert_to_datetime(data.get("date"))
@@ -51,5 +55,15 @@ class JobService:
 
             return job_schema.jsonify(job)
         
+        else:
+            return None
+
+    def delete_job(id):
+        job = Job.query.get(id)
+
+        if job != None:
+            db.session.delete(job)
+            db.session.commit()
+            return job_schema.jsonify(job)
         else:
             return None

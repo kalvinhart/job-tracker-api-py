@@ -21,8 +21,12 @@ def save_job():
 
 @app.get("/job/<string:id>")
 def get_job(id):
-    return JobController.get_job(id)
+    response = JobController.get_job(id)
 
+    if response != None:
+        return response
+    else:
+        return jsonify({"message": f"Job not found matching id {id}"}), 404
 
 @app.put("/job/<string:id>")
 def edit_job(id):
@@ -32,11 +36,16 @@ def edit_job(id):
     if response != None:
         return response
     else:
-        return jsonify({"message": f"Job not found matching id {id}"})
+        return jsonify({"message": f"Job not found matching id {id}"}), 404
 
 @app.delete("/job/<string:id>")
 def delete_job(id):
-    return f"delete job {id}"
+    response = JobController.delete_job(id)
+
+    if response != None:
+        return response
+    else:
+        return jsonify({"message": f"Job not found matching id {id}"}), 404
 
 # user
 
@@ -54,4 +63,4 @@ def login_user():
     if check_password_hash(user.password, user_credentials["password"]):
         return jsonify({"email": user.email})
     else:
-        return jsonify({"message": "Incorrect username/password"})
+        return jsonify({"message": "Incorrect username/password"}), 400

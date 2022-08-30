@@ -16,4 +16,4 @@ class JobController:
         return JobService.update_job(id, data)
 
     def delete_job(id):
-        pass
+        return JobService.delete_job(id)
