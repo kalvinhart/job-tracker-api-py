@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db
+from app import db, ma
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +30,13 @@ class Job(db.Model):
         self.contact_number = contact_number
         self.user_id = user_id
 
+class JobSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Job
+
+job_schema = JobSchema()
+jobs_schema = JobSchema(many=True)
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(40), unique=True, nullable=False)
@@ -41,3 +48,9 @@ class User(db.Model):
     def __init__(self, email, password):
         self.email = email
         self.password = password
+
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+
+user_schema = UserSchema()
