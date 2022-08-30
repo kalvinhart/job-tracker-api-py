@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from app import app, db
-from app.models import User, Job, user_schema, job_schema
+from app import app
+from app.models import User
 from werkzeug.security import check_password_hash
 
 
@@ -24,11 +24,17 @@ def get_job(id):
     return JobController.get_job(id)
 
 
-@app.put("/job/<string:id>/edit")
+@app.put("/job/<string:id>")
 def edit_job(id):
-    return f"edit job {id}"
+    data = request.get_json()
+    response = JobController.update_job(id, data)
 
-@app.delete("/job/<string:id>/delete")
+    if response != None:
+        return response
+    else:
+        return jsonify({"message": f"Job not found matching id {id}"})
+
+@app.delete("/job/<string:id>")
 def delete_job(id):
     return f"delete job {id}"
 
