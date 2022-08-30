@@ -17,6 +17,19 @@ class Job(db.Model):
     contact_number = db.Column(db.String(11), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
+    def __init__(self, status, title, company, location, salary, description, date_applied, benefits, contact_name, contact_number, user_id):
+        self.status = status
+        self.title = title
+        self.company = company
+        self.location = location
+        self.salary = salary
+        self.description = description
+        self.date_applied = date_applied
+        self.benefits = benefits
+        self.contact_name = contact_name
+        self.contact_number = contact_number
+        self.user_id = user_id
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(40), unique=True, nullable=False)
@@ -24,3 +37,7 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     jobs = db.relationship("Job", backref=db.backref("user", lazy="joined"), lazy=True)
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
