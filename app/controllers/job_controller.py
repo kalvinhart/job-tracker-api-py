@@ -9,11 +9,11 @@ class JobController:
     def get_job(id):
         return JobService.get_job(id)
 
-    def saveJob(data):
+    def save_job(data):
         return JobService.save_job(data)
 
-    def updateJob(job):
+    def update_job(job):
         pass
 
-    def deleteJob(id):
+    def delete_job(id):
         pass
