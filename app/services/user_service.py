@@ -9,27 +9,27 @@ class UserService:
         email, password = user_credentials.values()
 
         if email is None or password is None:
-            return None
+            return jsonify({"status": 400, "message": "Email and Password are required fields."})
     
         user_exists = User.query.filter_by(email=email).first()
 
         if user_exists != None:
-            return None
+            return jsonify({"status": 400, "message": "User already exists."})
         
         pw_hash = generate_password_hash(password)
         new_user = User(email, password=pw_hash)
         db.session.add(new_user)
         db.session.commit()
 
-        return jsonify({"message": "User created"})
+        return jsonify({"status": 201, "message": "User created"})
 
     def log_in_user(user_credentials):
         user = User.query.filter_by(email=user_credentials["email"]).first()
 
         if user != None:
             if check_password_hash(user.password, user_credentials["password"]):
-                return jsonify({"email": user.email})
+                return jsonify({"status": 200, "message": "User logged in.", "email": user.email})
             
-            return None
+            return jsonify({"status": 400, "message": "Username/password incorrect."})
         
-        return None
+        return jsonify({"status": 400, "message": "Username/password incorrect."})

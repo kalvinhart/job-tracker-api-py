@@ -55,16 +55,23 @@ def create_user():
 
     response = UserController.create_user(user_credentials)
 
-    if response != None:
-        return response
-
+    match response.get_json()["status"]:
+        case 201:
+            return response, 201
+        case 400:
+            return response, 400
+        case other:
+            return jsonify({"status": 500, "message": "Something went wrong."}), 500
 
 @app.post("/users/login")
 def login_user():
     user_credentials = request.get_json()
     response = UserController.log_in_user(user_credentials)
 
-    if response != None:
-        return response
-    else:
-        return jsonify({"message": "Incorrect username/password"}), 400
+    match response.get_json()["status"]:
+        case 200:
+            return response, 200
+        case 400:
+            return response, 400
+        case other:
+            return jsonify({"status": 500, "message": "Something went wrong."}), 500
