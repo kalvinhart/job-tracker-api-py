@@ -49,6 +49,15 @@ def delete_job(id):
         return jsonify({"message": f"Job not found matching id {id}"}), 404
 
 # user
+@app.post("/users/create")
+def create_user():
+    user_credentials = request.get_json()
+
+    response = UserController.create_user(user_credentials)
+
+    if response != None:
+        return response
+
 
 @app.post("/users/login")
 def login_user():
