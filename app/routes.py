@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash
 
 
 from app.controllers.job_controller import JobController
+from app.controllers.user_controller import UserController
 
 @app.get("/")
 def home():
@@ -49,18 +50,12 @@ def delete_job(id):
 
 # user
 
-@app.get("/user/<int:id>")
-def get_user(id):
-    user = User.query.get(id)
-    res = {"id": user.id, "email": user.email, "password": user.password}
-    return jsonify(res)
-
 @app.post("/users/login")
 def login_user():
     user_credentials = request.get_json()
-    user = User.query.filter_by(email=user_credentials["email"]).first()
+    response = UserController.log_in_user(user_credentials)
 
-    if check_password_hash(user.password, user_credentials["password"]):
-        return jsonify({"email": user.email})
+    if response != None:
+        return response
     else:
         return jsonify({"message": "Incorrect username/password"}), 400
