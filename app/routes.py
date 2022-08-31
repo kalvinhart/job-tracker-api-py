@@ -1,8 +1,5 @@
 from flask import request, jsonify
 from app import app
-from app.models import User
-from werkzeug.security import check_password_hash
-
 
 from app.controllers.job_controller import JobController
 from app.controllers.user_controller import UserController
