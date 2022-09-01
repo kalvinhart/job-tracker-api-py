@@ -7,22 +7,26 @@ from app.utils.date import convert_to_datetime
 class JobService:
 
     def get_all_jobs(user_id):
-        jobs = Job.query.all()
+        jobs = Job.query.filter_by(user_id=user_id)
         jobs_list = jobs_schema.dump(jobs)
         return jsonify(jobs_list)
 
     def get_job(user_id, job_id):
         job = Job.query.get(job_id)
-        # TODO: check that user matches the user input
+        
+        if job and job.user_id != user_id:
+            return jsonify({"status": 403, "message": "You do not have access to this job."})
+
         if job != None:
-            return job_schema.jsonify(job)
+            response = job_schema.jsonify(job)
+            return jsonify({"status": 200, "message": "Job retrieved.", "job": response.get_json()})
         else:
-            return None
+            return jsonify({"status": 404, "message": "Job not found."})
 
     def save_job(user_id, data):
         py_date = convert_to_datetime(data.get("date"))
 
-        new_job = Job(status="Pending", title=data.get("title"), company=data.get("company"), location=data.get("location"), salary=data.get("salary"), description=data.get("description"), date_applied=py_date, benefits=data.get("benefits"), contact_name=data.get("contactName"), contact_number=data.get("contactNumber"), user_id=data.get("user_id"))
+        new_job = Job(status="Pending", title=data.get("title"), company=data.get("company"), location=data.get("location"), salary=data.get("salary"), description=data.get("description"), date_applied=py_date, benefits=data.get("benefits"), contact_name=data.get("contactName"), contact_number=data.get("contactNumber"), user_id=user_id)
         
         db.session.add(new_job)
         db.session.commit()
@@ -31,6 +35,9 @@ class JobService:
 
     def update_job(user_id, id, data):
         job = Job.query.get(id)
+
+        if job and job.user_id != user_id:
+            return jsonify({"status": 403, "message": "You do not have access to this job."})
 
         if job != None:
             py_date_applied = convert_to_datetime(data.get("date"))
@@ -53,17 +60,23 @@ class JobService:
 
             db.session.commit()
 
-            return job_schema.jsonify(job)
+            response = job_schema.jsonify(job)
+            return jsonify({"status": 200, "message": "Job updated.", "job": response.get_json()})
         
         else:
-            return None
+            return jsonify({"status": 404, "message": "Job not found."})
 
     def delete_job(user_id, id):
         job = Job.query.get(id)
 
+        if job and job.user_id != user_id:
+            return jsonify({"status": 403, "message": "You do not have access to this job."})
+
         if job != None:
             db.session.delete(job)
             db.session.commit()
-            return job_schema.jsonify(job)
+            
+            response = job_schema.jsonify(job)
+            return jsonify({"status": 200, "message": "Job deleted.", "job": response.get_json()})
         else:
-            return None
+            return jsonify({"status": 404, "message": "Job not found."})

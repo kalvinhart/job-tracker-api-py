@@ -25,10 +25,15 @@ def save_job(user):
 def get_job(user, id):
     response = JobController.get_job(user["user_id"], id)
 
-    if response != None:
-        return response
-    else:
-        return jsonify({"message": f"Job not found matching id {id}"}), 404
+    match response.get_json()["status"]:
+        case 200:
+            return response, 200
+        case 403:
+            return response, 403
+        case 404:
+            return response, 404
+        case other:
+            return jsonify({"status": 500, "message": "Something went wrong."}), 500
 
 @app.put("/job/<string:id>")
 @token_required
@@ -36,20 +41,30 @@ def edit_job(user, id):
     data = request.get_json()
     response = JobController.update_job(user["user_id"], id, data)
 
-    if response != None:
-        return response
-    else:
-        return jsonify({"message": f"Job not found matching id {id}"}), 404
+    match response.get_json()["status"]:
+        case 200:
+            return response, 200
+        case 403:
+            return response, 403
+        case 404:
+            return response, 404
+        case other:
+            return jsonify({"status": 500, "message": "Something went wrong."}), 500
 
 @app.delete("/job/<string:id>")
 @token_required
 def delete_job(user, id):
     response = JobController.delete_job(user["user_id"], id)
 
-    if response != None:
-        return response
-    else:
-        return jsonify({"message": f"Job not found matching id {id}"}), 404
+    match response.get_json()["status"]:
+        case 200:
+            return response, 200
+        case 403:
+            return response, 403
+        case 404:
+            return response, 404
+        case other:
+            return jsonify({"status": 500, "message": "Something went wrong."}), 500
 
 # user
 @app.post("/users/create")
