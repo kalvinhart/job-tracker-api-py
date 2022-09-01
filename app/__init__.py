@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 
-app = Flask(__name__)
+application = Flask(__name__)
+app = application
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
