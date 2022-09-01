@@ -3,23 +3,27 @@ from app import app
 
 from app.controllers.job_controller import JobController
 from app.controllers.user_controller import UserController
+from app.middleware.token import token_required
 
 @app.get("/")
 def home():
     return "home route"
 
 @app.get("/jobs")
-def get_all_jobs():
-    return JobController.get_all_jobs()
+@token_required
+def get_all_jobs(user):
+    return JobController.get_all_jobs(user["user_id"])
 
 @app.post("/jobs/new")
-def save_job():
+@token_required
+def save_job(user):
     data = request.get_json()
-    return JobController.save_job(data)
+    return JobController.save_job(user["user_id"], data)
 
 @app.get("/job/<string:id>")
-def get_job(id):
-    response = JobController.get_job(id)
+@token_required
+def get_job(user, id):
+    response = JobController.get_job(user["user_id"], id)
 
     if response != None:
         return response
@@ -27,9 +31,10 @@ def get_job(id):
         return jsonify({"message": f"Job not found matching id {id}"}), 404
 
 @app.put("/job/<string:id>")
-def edit_job(id):
+@token_required
+def edit_job(user, id):
     data = request.get_json()
-    response = JobController.update_job(id, data)
+    response = JobController.update_job(user["user_id"], id, data)
 
     if response != None:
         return response
@@ -37,8 +42,9 @@ def edit_job(id):
         return jsonify({"message": f"Job not found matching id {id}"}), 404
 
 @app.delete("/job/<string:id>")
-def delete_job(id):
-    response = JobController.delete_job(id)
+@token_required
+def delete_job(user, id):
+    response = JobController.delete_job(user["user_id"], id)
 
     if response != None:
         return response

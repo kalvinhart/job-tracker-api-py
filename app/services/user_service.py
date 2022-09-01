@@ -1,7 +1,9 @@
 from flask import jsonify
 from app import db
-from app.models import User, user_schema
+from app.models import User
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from app.utils.create_token import create_token
 
 class UserService:
 
@@ -24,11 +26,14 @@ class UserService:
         return jsonify({"status": 201, "message": "User created"})
 
     def log_in_user(user_credentials):
-        user = User.query.filter_by(email=user_credentials["email"]).first()
+        email, password = user_credentials.values()
+
+        user = User.query.filter_by(email=email).first()
 
         if user != None:
-            if check_password_hash(user.password, user_credentials["password"]):
-                return jsonify({"status": 200, "message": "User logged in.", "email": user.email})
+            if check_password_hash(user.password, password):
+                token = create_token(user.id)
+                return jsonify({"status": 200, "message": "User logged in.", "email": user.email, "token": f"Bearer {token}"})
             
             return jsonify({"status": 400, "message": "Username/password incorrect."})
         

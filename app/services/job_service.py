@@ -6,20 +6,20 @@ from app.utils.date import convert_to_datetime
 
 class JobService:
 
-    def get_all_jobs():
+    def get_all_jobs(user_id):
         jobs = Job.query.all()
         jobs_list = jobs_schema.dump(jobs)
         return jsonify(jobs_list)
 
-    def get_job(id):
-        job = Job.query.get(id)
-
+    def get_job(user_id, job_id):
+        job = Job.query.get(job_id)
+        # TODO: check that user matches the user input
         if job != None:
             return job_schema.jsonify(job)
         else:
             return None
 
-    def save_job(data):
+    def save_job(user_id, data):
         py_date = convert_to_datetime(data.get("date"))
 
         new_job = Job(status="Pending", title=data.get("title"), company=data.get("company"), location=data.get("location"), salary=data.get("salary"), description=data.get("description"), date_applied=py_date, benefits=data.get("benefits"), contact_name=data.get("contactName"), contact_number=data.get("contactNumber"), user_id=data.get("user_id"))
@@ -29,7 +29,7 @@ class JobService:
 
         return job_schema.jsonify(new_job)
 
-    def update_job(id, data):
+    def update_job(user_id, id, data):
         job = Job.query.get(id)
 
         if job != None:
@@ -58,7 +58,7 @@ class JobService:
         else:
             return None
 
-    def delete_job(id):
+    def delete_job(user_id, id):
         job = Job.query.get(id)
 
         if job != None:
