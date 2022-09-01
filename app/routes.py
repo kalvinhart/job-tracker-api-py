@@ -25,15 +25,13 @@ def save_job(user):
 def get_job(user, id):
     response = JobController.get_job(user["user_id"], id)
 
-    match response.get_json()["status"]:
-        case 200:
-            return response, 200
-        case 403:
-            return response, 403
-        case 404:
-            return response, 404
-        case other:
-            return jsonify({"status": 500, "message": "Something went wrong."}), 500
+    valid_response_codes = [200, 403, 404]
+    response_status = response.get_json()["status"]
+
+    if response_status not in valid_response_codes:
+        return jsonify({"status": 500, "message": "Something went wrong."}), 500
+
+    return response, response_status
 
 @app.put("/job/<string:id>")
 @token_required
@@ -41,30 +39,26 @@ def edit_job(user, id):
     data = request.get_json()
     response = JobController.update_job(user["user_id"], id, data)
 
-    match response.get_json()["status"]:
-        case 200:
-            return response, 200
-        case 403:
-            return response, 403
-        case 404:
-            return response, 404
-        case other:
-            return jsonify({"status": 500, "message": "Something went wrong."}), 500
+    valid_response_codes = [200, 403, 404]
+    response_status = response.get_json()["status"]
+
+    if response_status not in valid_response_codes:
+        return jsonify({"status": 500, "message": "Something went wrong."}), 500
+
+    return response, response_status
 
 @app.delete("/job/<string:id>")
 @token_required
 def delete_job(user, id):
     response = JobController.delete_job(user["user_id"], id)
 
-    match response.get_json()["status"]:
-        case 200:
-            return response, 200
-        case 403:
-            return response, 403
-        case 404:
-            return response, 404
-        case other:
-            return jsonify({"status": 500, "message": "Something went wrong."}), 500
+    valid_response_codes = [200, 403, 404]
+    response_status = response.get_json()["status"]
+
+    if response_status not in valid_response_codes:
+        return jsonify({"status": 500, "message": "Something went wrong."}), 500
+
+    return response, response_status
 
 # user
 @app.post("/users/create")
@@ -73,23 +67,23 @@ def create_user():
 
     response = UserController.create_user(user_credentials)
 
-    match response.get_json()["status"]:
-        case 201:
-            return response, 201
-        case 400:
-            return response, 400
-        case other:
-            return jsonify({"status": 500, "message": "Something went wrong."}), 500
+    valid_response_codes = [201, 400]
+    response_status = response.get_json()["status"]
+
+    if response_status not in valid_response_codes:
+        return jsonify({"status": 500, "message": "Something went wrong."}), 500
+
+    return response, response_status
 
 @app.post("/users/login")
 def login_user():
     user_credentials = request.get_json()
     response = UserController.log_in_user(user_credentials)
 
-    match response.get_json()["status"]:
-        case 200:
-            return response, 200
-        case 400:
-            return response, 400
-        case other:
-            return jsonify({"status": 500, "message": "Something went wrong."}), 500
+    valid_response_codes = [200, 400]
+    response_status = response.get_json()["status"]
+
+    if response_status not in valid_response_codes:
+        return jsonify({"status": 500, "message": "Something went wrong."}), 500
+
+    return response, response_status
