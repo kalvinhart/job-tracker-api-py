@@ -6,7 +6,7 @@ It is built in Python using the Flask framework.
 
 Authentication is handled with JSON Web Tokens.
 
-It has not yet been integrated with the front end application, there will be a live link once it has.
+It is deployed with AWS using Elastic Beanstalk as well as a PostgreSQL database deployed with AWS RDS.
 
 ## Running Locally
 
