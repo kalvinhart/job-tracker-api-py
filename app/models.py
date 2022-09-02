@@ -41,7 +41,7 @@ jobs_schema = JobSchema(many=True)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(40), unique=True, nullable=False)
-    password = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(), unique=True, nullable=False)
     date_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     last_login = db.Column(db.DateTime(timezone=True), server_default=func.now())
     jobs = db.relationship("Job", backref=db.backref("user", lazy="joined"), lazy=True)
