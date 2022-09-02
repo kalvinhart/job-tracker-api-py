@@ -1,8 +1,8 @@
-"""empty message
+"""initial
 
-Revision ID: 69daff0070e2
+Revision ID: 799cec91299f
 Revises: 
-Create Date: 2022-09-01 14:20:52.497218
+Create Date: 2022-09-02 14:38:01.189342
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '69daff0070e2'
+revision = '799cec91299f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,9 +21,9 @@ def upgrade():
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=40), nullable=False),
-    sa.Column('password', sa.String(length=20), nullable=False),
-    sa.Column('date_created', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.Column('last_login', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('password', sa.String(), nullable=False),
+    sa.Column('date_created', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('last_login', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('password')
@@ -36,8 +36,8 @@ def upgrade():
     sa.Column('location', sa.String(length=40), nullable=False),
     sa.Column('salary', sa.Integer(), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('date_applied', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
-    sa.Column('date_updated', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('date_applied', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('date_updated', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('interview_date', sa.DateTime(timezone=True), nullable=True),
     sa.Column('benefits', sa.String(length=100), nullable=False),
     sa.Column('contact_name', sa.String(length=40), nullable=True),
